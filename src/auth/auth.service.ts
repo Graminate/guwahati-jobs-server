@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Pool } from 'pg';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
@@ -22,8 +26,15 @@ export class AuthService {
       VALUES($1, $2, $3, $4, $5) RETURNING *
     `;
     const values = [email, hashedPassword, first_name, last_name, role];
-    const result = await this.pool.query(query, values);
-    return result.rows[0];
+    try {
+      const result = await this.pool.query(query, values);
+      return result.rows[0];
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new ConflictException('Email already exists');
+      }
+      throw error;
+    }
   }
 
   async login(email: string, password: string) {
