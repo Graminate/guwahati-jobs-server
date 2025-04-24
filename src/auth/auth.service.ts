@@ -7,7 +7,7 @@ import {
 import { Pool } from 'pg';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import { CreateUserDto } from '../users/dto/create-user.dto';
+import { CreateUserDto } from 'src/users/users.dto';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class AuthService {
   async register(createUserDto: CreateUserDto) {
     try {
       const newUser = await this.usersService.create(createUserDto);
-     
+
       return newUser;
     } catch (error) {
       if (error instanceof ConflictException) {
