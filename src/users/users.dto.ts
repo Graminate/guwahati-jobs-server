@@ -5,6 +5,7 @@ import {
   MinLength,
   IsOptional,
   MaxLength,
+  IsUrl,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -29,6 +30,35 @@ export class CreateUserDto {
   @IsString()
   @MaxLength(30)
   phone_number?: string;
+
+  @IsOptional()
+  @IsUrl()
+  profile_picture?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  region?: string;
+
+  @IsOptional()
+  @IsUrl()
+  cv?: string;
+
+  @IsOptional()
+  @IsUrl()
+  linkedin?: string;
+
+  @IsOptional()
+  @IsUrl()
+  github?: string;
+
+  @IsOptional()
+  @IsUrl()
+  behance?: string;
+
+  @IsOptional()
+  @IsUrl()
+  portfolio?: string;
 }
 
 export class UpdateUserDto {
@@ -48,4 +78,33 @@ export class UpdateUserDto {
   @IsString()
   @MaxLength(30)
   phone_number?: string;
+
+  @IsOptional()
+  @IsUrl()
+  profile_picture?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  region?: string;
+
+  @IsOptional()
+  @IsUrl()
+  cv?: string;
+
+  @IsOptional()
+  @IsUrl()
+  linkedin?: string;
+
+  @IsOptional()
+  @IsUrl()
+  github?: string;
+
+  @IsOptional()
+  @IsUrl()
+  behance?: string;
+
+  @IsOptional()
+  @IsUrl()
+  portfolio?: string;
 }

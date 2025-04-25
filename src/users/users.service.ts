@@ -12,7 +12,7 @@ import pool from '@/config/database';
 @Injectable()
 export class UsersService {
   private userFields =
-    'id, email, first_name, last_name, phone_number, created_at, updated_at';
+    'id, email, first_name, last_name, phone_number, profile_picture, region, cv, linkedin, github, behance, portfolio, created_at, updated_at';
 
   async create({
     email,
@@ -20,6 +20,13 @@ export class UsersService {
     first_name,
     last_name,
     phone_number,
+    profile_picture,
+    region,
+    cv,
+    linkedin,
+    github,
+    behance,
+    portfolio,
   }: CreateUserDto) {
     if (!email || !password || !first_name || !last_name) {
       throw new BadRequestException('All required fields must be provided');
@@ -28,10 +35,25 @@ export class UsersService {
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
       const result = await pool.query(
-        `INSERT INTO users(email, password, first_name, last_name, phone_number)
-       VALUES($1, $2, $3, $4, $5) 
-       RETURNING id, email, first_name, last_name, phone_number, created_at, updated_at`,
-        [email, hashedPassword, first_name, last_name, phone_number || null],
+        `INSERT INTO users(
+          email, password, first_name, last_name, phone_number,
+          profile_picture, region, cv, linkedin, github, behance, portfolio
+        ) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) 
+        RETURNING ${this.userFields}`,
+        [
+          email,
+          hashedPassword,
+          first_name,
+          last_name,
+          phone_number || null,
+          profile_picture || null,
+          region || null,
+          cv || null,
+          linkedin || null,
+          github || null,
+          behance || null,
+          portfolio || null,
+        ],
       );
 
       if (!result.rows[0]) {
@@ -64,18 +86,50 @@ export class UsersService {
 
   async update(
     id: number,
-    { email, first_name, last_name, phone_number }: UpdateUserDto,
+    {
+      email,
+      first_name,
+      last_name,
+      phone_number,
+      profile_picture,
+      region,
+      cv,
+      linkedin,
+      github,
+      behance,
+      portfolio,
+    }: UpdateUserDto,
   ) {
     try {
       const result = await pool.query(
         `UPDATE users SET 
-        email = COALESCE($1, email),
-        first_name = COALESCE($2, first_name),
-        last_name = COALESCE($3, last_name),
-        phone_number = COALESCE($4, phone_number),
-        updated_at = NOW()
-       WHERE id = $5 RETURNING ${this.userFields}`,
-        [email, first_name, last_name, phone_number, id], // Now correctly mapped
+          email = COALESCE($1, email),
+          first_name = COALESCE($2, first_name),
+          last_name = COALESCE($3, last_name),
+          phone_number = COALESCE($4, phone_number),
+          profile_picture = COALESCE($5, profile_picture),
+          region = COALESCE($6, region),
+          cv = COALESCE($7, cv),
+          linkedin = COALESCE($8, linkedin),
+          github = COALESCE($9, github),
+          behance = COALESCE($10, behance),
+          portfolio = COALESCE($11, portfolio),
+          updated_at = NOW()
+        WHERE id = $12 RETURNING ${this.userFields}`,
+        [
+          email,
+          first_name,
+          last_name,
+          phone_number,
+          profile_picture,
+          region,
+          cv,
+          linkedin,
+          github,
+          behance,
+          portfolio,
+          id,
+        ],
       );
       if (!result.rows[0])
         throw new NotFoundException(`User with ID ${id} not found`);
@@ -90,7 +144,10 @@ export class UsersService {
 
   async remove(id: number) {
     const result = await pool.query(
-      `DELETE FROM users WHERE id = $1 RETURNING ${this.userFields.replace(', created_at, updated_at', '')}`,
+      `DELETE FROM users WHERE id = $1 RETURNING ${this.userFields.replace(
+        /, created_at, updated_at/g,
+        '',
+      )}`,
       [id],
     );
     if (!result.rows[0])
