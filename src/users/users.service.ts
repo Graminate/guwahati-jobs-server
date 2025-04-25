@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ConflictException,
   InternalServerErrorException,
+  BadRequestException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto, UpdateUserDto } from './users.dto';
@@ -11,39 +12,39 @@ import pool from '@/config/database';
 @Injectable()
 export class UsersService {
   private userFields =
-    'id, email, first_name, last_name, role, phone_number, created_at, updated_at';
+    'id, email, first_name, last_name, phone_number, created_at, updated_at';
 
   async create({
     email,
     password,
     first_name,
     last_name,
-    role,
     phone_number,
   }: CreateUserDto) {
+    if (!email || !password || !first_name || !last_name) {
+      throw new BadRequestException('All required fields must be provided');
+    }
+
     try {
+      const hashedPassword = await bcrypt.hash(password, 10);
       const result = await pool.query(
-        `INSERT INTO users(email, password, first_name, last_name, role, phone_number)
-         VALUES($1, $2, $3, $4, $5, $6) RETURNING ${this.userFields}`,
-        [
-          email,
-          await bcrypt.hash(password, 10),
-          first_name,
-          last_name,
-          role,
-          phone_number,
-        ],
+        `INSERT INTO users(email, password, first_name, last_name, phone_number)
+       VALUES($1, $2, $3, $4, $5) 
+       RETURNING id, email, first_name, last_name, phone_number, created_at, updated_at`,
+        [email, hashedPassword, first_name, last_name, phone_number || null],
       );
-      if (!result.rows[0])
-        throw new InternalServerErrorException(
-          'User creation failed unexpectedly.',
-        );
+
+      if (!result.rows[0]) {
+        throw new InternalServerErrorException('User creation failed');
+      }
+
       return result.rows[0];
     } catch (error) {
-      if (error.code === '23505')
-        throw new ConflictException('Email already exists.');
-      console.error('Error creating user:', error);
-      throw new InternalServerErrorException('Failed to create user.');
+      console.error('Database Error:', error);
+      if (error.code === '23505') {
+        throw new ConflictException('Email already exists');
+      }
+      throw new InternalServerErrorException('Failed to create user');
     }
   }
 
@@ -63,19 +64,18 @@ export class UsersService {
 
   async update(
     id: number,
-    { email, first_name, last_name, role, phone_number }: UpdateUserDto,
+    { email, first_name, last_name, phone_number }: UpdateUserDto,
   ) {
     try {
       const result = await pool.query(
         `UPDATE users SET 
-          email = COALESCE($1, email),
-          first_name = COALESCE($2, first_name),
-          last_name = COALESCE($3, last_name),
-          role = COALESCE($4, role),
-          phone_number = COALESCE($5, phone_number),
-          updated_at = NOW()
-         WHERE id = $6 RETURNING ${this.userFields}`,
-        [email, first_name, last_name, role, phone_number, id],
+        email = COALESCE($1, email),
+        first_name = COALESCE($2, first_name),
+        last_name = COALESCE($3, last_name),
+        phone_number = COALESCE($4, phone_number),
+        updated_at = NOW()
+       WHERE id = $5 RETURNING ${this.userFields}`,
+        [email, first_name, last_name, phone_number, id], // Now correctly mapped
       );
       if (!result.rows[0])
         throw new NotFoundException(`User with ID ${id} not found`);

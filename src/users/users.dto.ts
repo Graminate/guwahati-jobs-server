@@ -25,10 +25,6 @@ export class CreateUserDto {
   @IsNotEmpty()
   last_name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  role: string;
-
   @IsOptional()
   @IsString()
   @MaxLength(30)
@@ -47,10 +43,6 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   last_name?: string;
-
-  @IsOptional()
-  @IsString()
-  role?: string;
 
   @IsOptional()
   @IsString()
