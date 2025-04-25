@@ -1,7 +1,6 @@
 import { Controller, Post, Get, Put, Body, Param } from '@nestjs/common';
 import { InterviewsService } from './interviews.service';
-import { CreateInterviewDto } from './dto/create-interview.dto';
-import { UpdateInterviewDto } from './dto/update-interview.dto';
+import { CreateInterviewDto, UpdateInterviewDto } from './interviews.dto';
 
 @Controller('interviews')
 export class InterviewsController {

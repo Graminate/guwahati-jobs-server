@@ -8,8 +8,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { ApplicationsService } from './applications.service';
-import { CreateApplicationDto } from './dto/create-application.dto';
-import { UpdateApplicationDto } from './dto/update-application.dto';
+import { CreateApplicationDto, UpdateApplicationDto } from './applications.dto';
 
 @Controller('applications')
 export class ApplicationsController {

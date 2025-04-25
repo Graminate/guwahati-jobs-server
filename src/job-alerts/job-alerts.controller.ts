@@ -8,8 +8,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { JobAlertsService } from './job-alerts.service';
-import { CreateJobAlertDto } from './dto/create-job-alert.dto';
-import { UpdateJobAlertDto } from './dto/update-job-alert.dto';
+import { CreateJobAlertDto, UpdateJobAlertDto } from './job-alerts.dto';
 
 @Controller('job-alerts')
 export class JobAlertsController {

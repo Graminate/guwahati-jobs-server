@@ -1,4 +1,6 @@
 import { IsInt, IsOptional, IsString, IsUrl } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+
 
 export class CreateCandidateProfileDto {
   @IsInt()
@@ -24,3 +26,9 @@ export class CreateCandidateProfileDto {
   @IsUrl()
   portfolio_url?: string;
 }
+
+
+
+export class UpdateCandidateProfileDto extends PartialType(
+  CreateCandidateProfileDto,
+) {}

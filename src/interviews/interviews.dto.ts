@@ -1,4 +1,5 @@
 import { IsInt, IsString, IsDateString, IsOptional } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateInterviewDto {
   @IsInt()
@@ -19,3 +20,5 @@ export class CreateInterviewDto {
   @IsString()
   notes?: string;
 }
+
+export class UpdateInterviewDto extends PartialType(CreateInterviewDto) {}

@@ -1,4 +1,5 @@
 import { IsInt, IsOptional, IsString, IsUrl } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateApplicationDto {
   @IsInt()
@@ -19,3 +20,7 @@ export class CreateApplicationDto {
   @IsString()
   status?: string;
 }
+
+
+export class UpdateApplicationDto extends PartialType(CreateApplicationDto) {}
+

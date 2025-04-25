@@ -1,4 +1,5 @@
 import { IsInt, IsOptional, IsString, IsUrl, IsObject } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateCompanyProfileDto {
   @IsInt()
@@ -31,3 +32,7 @@ export class CreateCompanyProfileDto {
   @IsObject()
   social_links?: Record<string, string>;
 }
+
+export class UpdateCompanyProfileDto extends PartialType(
+  CreateCompanyProfileDto,
+) {}

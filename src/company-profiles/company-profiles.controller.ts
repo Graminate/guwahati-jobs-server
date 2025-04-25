@@ -8,8 +8,10 @@ import {
   Param,
 } from '@nestjs/common';
 import { CompanyProfilesService } from './company-profiles.service';
-import { CreateCompanyProfileDto } from './dto/create-company-profile.dto';
-import { UpdateCompanyProfileDto } from './dto/update-company-profile.dto';
+import {
+  CreateCompanyProfileDto,
+  UpdateCompanyProfileDto,
+} from './company-profiles.dto';
 
 @Controller('companies')
 export class CompanyProfilesController {

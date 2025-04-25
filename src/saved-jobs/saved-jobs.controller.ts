@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Delete, Body, Param } from '@nestjs/common';
 import { SavedJobsService } from './saved-jobs.service';
-import { CreateSavedJobDto } from './dto/create-saved-job.dto';
+import { CreateSavedJobDto } from './saved-jobs.dto';
 
 @Controller('saved-jobs')
 export class SavedJobsController {

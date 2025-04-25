@@ -8,8 +8,10 @@ import {
   Param,
 } from '@nestjs/common';
 import { CandidateProfilesService } from './candidate-profiles.service';
-import { CreateCandidateProfileDto } from './dto/create-candidate-profile.dto';
-import { UpdateCandidateProfileDto } from './dto/update-candidate-profile.dto';
+import {
+  CreateCandidateProfileDto,
+  UpdateCandidateProfileDto,
+} from './candidate-profiles.dto';
 
 @Controller('candidates')
 export class CandidateProfilesController {

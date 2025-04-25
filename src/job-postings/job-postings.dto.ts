@@ -5,6 +5,7 @@ import {
   IsBoolean,
   IsDateString,
 } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateJobPostingDto {
   @IsInt()
@@ -44,3 +45,5 @@ export class CreateJobPostingDto {
   @IsBoolean()
   is_featured?: boolean;
 }
+
+export class UpdateJobPostingDto extends PartialType(CreateJobPostingDto) {}
