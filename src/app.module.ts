@@ -14,10 +14,11 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { JobAlertsModule } from './job-alerts/job-alerts.module';
+import { PasswordModule } from './password/password.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }), // Loads environment variables
+    ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
     UsersModule,
     CompanyProfilesModule,
@@ -31,6 +32,7 @@ import { JobAlertsModule } from './job-alerts/job-alerts.module';
     SubscriptionsModule,
     NotificationsModule,
     JobAlertsModule,
+    PasswordModule
   ],
 })
 export class AppModule {}
